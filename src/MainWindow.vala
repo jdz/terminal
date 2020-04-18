@@ -261,7 +261,7 @@ namespace Terminal {
 
             set_size_request (app.minimum_width, app.minimum_height);
 
-            configure_event.connect (on_window_state_change);
+            // configure_event.connect (on_window_state_change);
             destroy.connect (on_destroy);
             focus_in_event.connect (() => {
                 if (focus_timeout == 0) {
@@ -797,7 +797,7 @@ namespace Terminal {
 
         private void on_tab_reordered (Granite.Widgets.Tab tab, int new_pos) {
             current_terminal.grab_focus ();
-            save_opened_terminals ();
+            // save_opened_terminals ();
         }
 
         private void on_tab_restored (string label, string restore_key, GLib.Icon? icon) {
@@ -917,40 +917,40 @@ namespace Terminal {
             get_simple_action (ACTION_COPY_LAST_OUTPUT).set_enabled (current_terminal.has_output ());
         }
 
-        private uint timer_window_state_change = 0;
-        private bool on_window_state_change (Gdk.EventConfigure event) {
-            // triggered when the size, position or stacking of the window has changed
-            // it is delayed 400ms to prevent spamming gsettings
-            if (timer_window_state_change > 0)
-                GLib.Source.remove (timer_window_state_change);
+        // private uint timer_window_state_change = 0;
+        // private bool on_window_state_change (Gdk.EventConfigure event) {
+        //     // triggered when the size, position or stacking of the window has changed
+        //     // it is delayed 400ms to prevent spamming gsettings
+        //     if (timer_window_state_change > 0)
+        //         GLib.Source.remove (timer_window_state_change);
 
-            timer_window_state_change = GLib.Timeout.add (400, () => {
-                timer_window_state_change = 0;
-                if (get_window () == null)
-                    return false;
+        //     timer_window_state_change = GLib.Timeout.add (400, () => {
+        //         timer_window_state_change = 0;
+        //         if (get_window () == null)
+        //             return false;
 
-                /* Check for fullscreen first: https://github.com/elementary/terminal/issues/377 */
-                if ((get_window ().get_state () & Gdk.WindowState.FULLSCREEN) != 0) {
-                    Terminal.Application.saved_state.set_enum ("window-state", MainWindow.FULLSCREEN);
-                } else if (is_maximized) {
-                    Terminal.Application.saved_state.set_enum ("window-state", MainWindow.MAXIMIZED);
-                } else {
-                    Terminal.Application.saved_state.set_enum ("window-state", MainWindow.NORMAL);
+        //         /* Check for fullscreen first: https://github.com/elementary/terminal/issues/377 */
+        //         if ((get_window ().get_state () & Gdk.WindowState.FULLSCREEN) != 0) {
+        //             Terminal.Application.saved_state.set_enum ("window-state", MainWindow.FULLSCREEN);
+        //         } else if (is_maximized) {
+        //             Terminal.Application.saved_state.set_enum ("window-state", MainWindow.MAXIMIZED);
+        //         } else {
+        //             Terminal.Application.saved_state.set_enum ("window-state", MainWindow.NORMAL);
 
-                    var rect = Gdk.Rectangle ();
-                    get_size (out rect.width, out rect.height);
-                    Terminal.Application.saved_state.set ("window-size", "(ii)", rect.width, rect.height);
+        //             var rect = Gdk.Rectangle ();
+        //             get_size (out rect.width, out rect.height);
+        //             Terminal.Application.saved_state.set ("window-size", "(ii)", rect.width, rect.height);
 
-                    int root_x, root_y;
-                    get_position (out root_x, out root_y);
-                    Terminal.Application.saved_state.set ("window-position", "(ii)", root_x, root_y);
-                }
+        //             int root_x, root_y;
+        //             get_position (out root_x, out root_y);
+        //             Terminal.Application.saved_state.set ("window-position", "(ii)", root_x, root_y);
+        //         }
 
-                return false;
-            });
+        //         return false;
+        //     });
 
-            return base.configure_event (event);
-        }
+        //     return base.configure_event (event);
+        // }
 
         private void on_switch_page (Granite.Widgets.Tab? old,
                                      Granite.Widgets.Tab new_tab) {
@@ -1193,7 +1193,7 @@ namespace Terminal {
         }
 
         protected override bool delete_event (Gdk.EventAny event) {
-            save_opened_terminals ();
+            // save_opened_terminals ();
             var tabs_to_terminate = new GLib.List <TerminalWidget> ();
 
             foreach (var terminal_widget in terminals) {
@@ -1477,42 +1477,42 @@ namespace Terminal {
             return;
         }
 
-        private void save_opened_terminals () {
-            string[] opened_tabs = {};
-            string[] zooms = {};
+        // private void save_opened_terminals () {
+        //     string[] opened_tabs = {};
+        //     string[] zooms = {};
 
-            Application.saved_state.set_double ("zoom", current_terminal.font_scale);
+        //     Application.saved_state.set_double ("zoom", current_terminal.font_scale);
 
-            if (Granite.Services.System.history_is_enabled () &&
-                Application.settings.get_boolean ("remember-tabs")) {
+        //     if (Granite.Services.System.history_is_enabled () &&
+        //         Application.settings.get_boolean ("remember-tabs")) {
 
-                notebook.tabs.foreach ((tab) => {
-                    var term = get_term_widget (tab);
-                    if (term != null) {
-                        var location = term.get_shell_location ();
-                        if (location != null && location != "") {
-                            opened_tabs += location;
-                            zooms += ("%.1f").printf (term.font_scale);
-                        }
-                    }
-                });
-            }
+        //         notebook.tabs.foreach ((tab) => {
+        //             var term = get_term_widget (tab);
+        //             if (term != null) {
+        //                 var location = term.get_shell_location ();
+        //                 if (location != null && location != "") {
+        //                     opened_tabs += location;
+        //                     zooms += ("%.1f").printf (term.font_scale);
+        //                 }
+        //             }
+        //         });
+        //     }
 
-            Terminal.Application.saved_state.set_strv (
-                "tabs",
-                opened_tabs
-            );
+        //     Terminal.Application.saved_state.set_strv (
+        //         "tabs",
+        //         opened_tabs
+        //     );
 
-            Terminal.Application.saved_state.set_strv (
-                "tab-zooms",
-                zooms
-            );
+        //     Terminal.Application.saved_state.set_strv (
+        //         "tab-zooms",
+        //         zooms
+        //     );
 
-            Terminal.Application.saved_state.set_int (
-                "focused-tab",
-                notebook.get_tab_position (notebook.current)
-            );
-        }
+        //     Terminal.Application.saved_state.set_int (
+        //         "focused-tab",
+        //         notebook.get_tab_position (notebook.current)
+        //     );
+        // }
 
         /** Return enough of @path to distinguish it from @conflict_path **/
         private string disambiguate_label (string path, string conflict_path) {
