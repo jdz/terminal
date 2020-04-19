@@ -313,6 +313,8 @@ namespace Terminal {
             allow_bold = Application.settings.get_boolean ("allow-bold");
 #endif
 
+            bold_is_bright = Application.settings.get_boolean ("bold-is-bright");
+
 // Support for non-UTF-8 encoding is deprecated
 #if !VTE_0_60
             /* Load encoding */
