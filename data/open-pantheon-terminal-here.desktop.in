@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Terminal
+Name=Elementary terminal
 TryExec=io.elementary.terminal
 Exec=io.elementary.terminal -w %u
 Icon=utilities-terminal

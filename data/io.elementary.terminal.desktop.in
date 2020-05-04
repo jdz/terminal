@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Terminal
+Name=Elementary terminal
 GenericName=Terminal
 Comment=Use the command line
 TryExec=io.elementary.terminal
