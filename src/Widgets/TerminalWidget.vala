@@ -169,7 +169,7 @@ namespace Terminal {
 
             button_release_event.connect ((event) => {
 
-                if (event.button == Gdk.BUTTON_PRIMARY) {
+                if (event.button == Gdk.BUTTON_PRIMARY && Gdk.ModifierType.CONTROL_MASK in event.state) {
                     if (allow_hyperlink) {
                         link_uri = get_link (event);
 
