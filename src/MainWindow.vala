@@ -192,7 +192,7 @@ namespace Terminal {
             restore_saved_state (restore_pos);
 
             clipboard = Gtk.Clipboard.get (Gdk.Atom.intern ("CLIPBOARD", false));
-            clipboard.owner_change.connect (update_context_menu);
+            // clipboard.owner_change.connect (update_context_menu);
 
             primary_selection = Gtk.Clipboard.get (Gdk.Atom.intern ("PRIMARY", false));
 
@@ -1292,12 +1292,12 @@ namespace Terminal {
         private void get_current_selection_link_or_pwd (Gtk.ClipboardTextReceivedFunc uri_handler) {
             var link_uri = current_terminal.link_uri;
             if (link_uri == null) {
-                if (current_terminal.get_has_selection ()) {
-                    current_terminal.copy_primary ();
-                    primary_selection.request_text (uri_handler);
-                } else {
+                // if (current_terminal.get_has_selection ()) {
+                //     current_terminal.copy_primary ();
+                //     primary_selection.request_text (uri_handler);
+                // } else {
                     uri_handler (primary_selection, current_terminal.get_shell_location ());
-                }
+                // }
             } else {
                 if (!link_uri.contains ("://")) {
                     link_uri = "http://" + link_uri;
